@@ -64,9 +64,13 @@ module gb_APU (
 
     // Store the custom wave for channel 3
     logic [7:0] customWave [16];
+
+    initial begin
+        $readmemb("./sawtooth.mif", customWave);
+    end
+
     logic [3:0] wave_addr;
     logic [7:0] wave_data;
-
     assign wave_data = customWave[wave_addr];
 
     ////////////////////////////////////
