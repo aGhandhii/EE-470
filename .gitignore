@@ -5,6 +5,7 @@
 *.sdc
 *.srf
 *.cdf
+*.mem
 work/
 vsim.wlf
 db/
