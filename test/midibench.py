@@ -57,7 +57,7 @@ for data in midi_data:
         new_row = pd.DataFrame({
             'length': 0 if data['cycles'] < 0 or data['cycles'] > 63 else data['cycles'],
             'volume': [velocity_to_volume(data['velocity'])],
-            'period': [pulse_freq_to_period(data['freq'])] if data['track'] in [1, 2, 3] else None
+            'period': [pulse_freq_to_period(data['freq'])]
         })
         if data['track'] == 1:
             pulse_1 = pd.concat([pulse_1, new_row], ignore_index=True)
@@ -66,24 +66,35 @@ for data in midi_data:
         elif data['track'] == 3:
             custom = pd.concat([custom, new_row], ignore_index=True)
         elif data['track'] == 4:
-            noise = pd.concat([noise, new_row.drop(columns='period')], ignore_index=True)
+            noise = pd.concat([noise, new_row], ignore_index=True)
 
-# append 00 to length in custom channel
-
-def export_to_mem_file(df, filename, length_bits):
+def export_to_mem_file(df, filename, length_bits, volume_bits):
     with open(filename, 'w') as f:
         for _, row in df.iterrows():
             length = format(int(row['length']), f'0{length_bits}b')
-            volume = format(int(row['volume']), '04b')
+            if volume_bits == 4:
+                volume = format(int(row['volume']), '04b')
+            elif volume_bits == 2:
+                if int(row['volume']) == 0:
+                    volume = format(0, '02b')
+                elif int(row['volume']) <= 4:
+                    volume = format(3, '02b')
+                elif int(row['volume']) <= 8:
+                    volume = format(2, '02b')
+                elif int(row['volume']) <= 15:
+                    volume = format(1, '02b')
+                else:
+                    volume = format(0, '02b')  # default to '00' if volume > 15
+            else:
+                raise ValueError('Volume bits must be 2 or 4')
             line = f"{length} {volume}"
             if 'period' in row and not pd.isna(row['period']):
                 period = format(int(row['period']), '011b')
                 line += f" {period}"
             f.write(f"{line}\n")
 
-export_to_mem_file(pulse_1, 'pulse_1.mem', 6)
-export_to_mem_file(pulse_2, 'pulse_2.mem', 6)
-export_to_mem_file(custom, 'custom.mem', 8)
-export_to_mem_file(noise, 'noise.mem', 6)
-
+export_to_mem_file(pulse_1, 'pulse_1.mem', 6, 4)
+export_to_mem_file(pulse_2, 'pulse_2.mem', 6, 4)
+export_to_mem_file(custom, 'custom.mem', 8, 2)
+export_to_mem_file(noise, 'noise.mem', 6, 4)
 # print(pulse_1)
