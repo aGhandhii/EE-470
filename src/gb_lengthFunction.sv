@@ -13,7 +13,7 @@ Inputs:
     clk_length_ctr  - Length Function Clock
     start           - Start Signal
     single          - Length Enable
-    length          - Initial Length Timer (6-bit for Ch 1,2,4 and 8-bit for Ch 3)
+    length          - Initial Length Timer (6-bit: Ch 1,2,4, 8-bit: Ch 3)
 
 Outputs:
     enable          - Active while the length counter is still counting

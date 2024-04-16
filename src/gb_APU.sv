@@ -54,10 +54,6 @@ module gb_APU (
     output logic [15:0] audio_out
 );
 
-    // Master volume modifier
-    logic [2:0] output_level;
-    assign output_level = 3'b111;  // Max this out for now
-
     ////////////////////////////////
     // CUSTOM WAVE MEMORY CONTROL //
     ////////////////////////////////
@@ -205,6 +201,12 @@ module gb_APU (
     In physical hardware, the output from the Volume module is sent through a
     High-Pass filter.
     */
+
+    // Master volume modifier
+    logic [2:0] output_level;
+    assign output_level = 3'b111;  // Max this out for now
+
+    // DAC Unit
     logic [5:0] DAC_sum;
     always_comb begin
         DAC_sum = 6'd0;
