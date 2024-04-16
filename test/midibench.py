@@ -33,7 +33,7 @@ def custom_freq_to_period(freq):
 def velocity_to_volume(velocity):
     return int((velocity / 127) * 15)
 
-tick_T = ticks_to_cycles(1, ticks_per_beat, tempo, clock_T) # 1 tick in cycles
+tick_T = tick2second(1, ticks_per_beat, tempo)# 1 tick in cycles
 
 pulse_1 = pd.DataFrame(columns=['length', 'volume', 'period'])
 pulse_2 = pd.DataFrame(columns=['length', 'volume', 'period'])
@@ -49,13 +49,13 @@ for i, track in enumerate(mid.tracks): # parse midi data to dict
                 'track': i,
                 'freq': midi_to_freq(msg.note),
                 'velocity': msg.velocity,
-                'cycles': (tick_T * msg.time)
+                'cycles': int(64 - (256*(tick_T * msg.time)))
             })
 
 for data in midi_data:
     if 'track' in data:
         new_row = pd.DataFrame({
-            'length': [data['cycles']],
+            'length': 0 if data['cycles'] < 0 or data['cycles'] > 63 else data['cycles'],
             'volume': [velocity_to_volume(data['velocity'])],
             'period': [pulse_freq_to_period(data['freq'])] if data['track'] in [1, 2, 3] else None
         })
@@ -85,3 +85,5 @@ export_to_mem_file(pulse_1, 'pulse_1.mem', 6)
 export_to_mem_file(pulse_2, 'pulse_2.mem', 6)
 export_to_mem_file(custom, 'custom.mem', 8)
 export_to_mem_file(noise, 'noise.mem', 6)
+
+# print(pulse_1)
