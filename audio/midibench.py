@@ -93,8 +93,8 @@ def export_to_mem_file(df, filename, length_bits, volume_bits):
                 line += f" {period}"
             f.write(f"{line}\n")
 
-export_to_mem_file(pulse_1, 'pulse_1.mem', 6, 4)
-export_to_mem_file(pulse_2, 'pulse_2.mem', 6, 4)
-export_to_mem_file(custom, 'custom.mem', 8, 2)
-export_to_mem_file(noise, 'noise.mem', 6, 4)
+export_to_mem_file(pulse_1, 'pulse_1.mif', 6, 4)
+export_to_mem_file(pulse_2, 'pulse_2.mif', 6, 4)
+export_to_mem_file(custom, 'custom.mif', 8, 2)
+export_to_mem_file(noise, 'noise.mif', 6, 4)
 # print(pulse_1)

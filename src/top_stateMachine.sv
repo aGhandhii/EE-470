@@ -27,9 +27,9 @@ module top_stateMachine(
     logic [19:0] tempo_counter;
 
     // Handle state progession
-    logic [1:0] ps, ns;
+    logic [1:0] ns;
     always_comb begin
-        case (ps)
+        case (state)
             S_RESET: begin
                 ns = S_LOAD;
             end
@@ -49,11 +49,11 @@ module top_stateMachine(
     // Clock Logic
     always_ff @(posedge clk) begin
         if (reset) begin
-            ps <= S_RESET;
+            state <= S_RESET;
         end
         else begin
-            tempo_counter <= (ps == S_PLAY) ? tempo_counter + 20'd1 : 20'd0;
-            ps <= ns;
+            tempo_counter <= (state == S_PLAY) ? tempo_counter + 20'd1 : 20'd0;
+            state <= ns;
         end
     end
 

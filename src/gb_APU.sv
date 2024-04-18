@@ -62,7 +62,7 @@ module gb_APU (
     logic [7:0] customWave [16];
 
     initial begin
-        $readmemb("./sawtooth.mif", customWave);
+        $readmemb("./audio/sawtooth.mif", customWave);
     end
 
     logic [3:0] wave_addr;
