@@ -38,7 +38,7 @@ tick_T = tick2second(1, ticks_per_beat, tempo)# 1 tick in cycles
 pulse_1 = pd.DataFrame(columns=['length', 'volume', 'period'])
 pulse_2 = pd.DataFrame(columns=['length', 'volume', 'period'])
 custom = pd.DataFrame(columns=['length', 'volume', 'period'])
-noise = pd.DataFrame(columns=['length', 'volume'])
+noise = pd.DataFrame(columns=['length', 'volume', 'period'])
 
 midi_data = []
 
@@ -88,13 +88,8 @@ def export_to_mem_file(df, filename, length_bits, volume_bits, period_bits):
             else:
                 raise ValueError('Volume bits must be 2 or 4')
             line = f"{length}{volume}"
-            if period_bits == 11:
-                period = format(int(row['period']), f'0{length_bits}b')
-                line += f"{period}"
-            elif period_bits == 8:
-                period = int(row['period']) & 0xFF  # keep only the lower 8 bits
-                formatted_period = format(period, f'0{length_bits}b')  # format as 8-bit binary string
-                line += f"{formatted_period}"
+            period = format(int(row['period']), f'0{length_bits}b')
+            line += f"{period}"
             f.write(f"{line}\n")
 
 export_to_mem_file(pulse_1, 'pulse_1.mif', 6, 4, 11)
