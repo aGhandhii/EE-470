@@ -68,7 +68,7 @@ for data in midi_data:
         elif data['track'] == 4:
             noise = pd.concat([noise, new_row], ignore_index=True)
 
-def export_to_mem_file(df, filename, length_bits, volume_bits):
+def export_to_mem_file(df, filename, length_bits, volume_bits, period_bits):
     with open(filename, 'w') as f:
         for _, row in df.iterrows():
             length = format(int(row['length']), f'0{length_bits}b')
@@ -87,14 +87,18 @@ def export_to_mem_file(df, filename, length_bits, volume_bits):
                     volume = format(0, '02b')  # default to '00' if volume > 15
             else:
                 raise ValueError('Volume bits must be 2 or 4')
-            line = f"{length} {volume}"
-            if 'period' in row and not pd.isna(row['period']):
-                period = format(int(row['period']), '011b')
-                line += f" {period}"
+            line = f"{length}{volume}"
+            if period_bits == 11:
+                period = format(int(row['period']), f'0{length_bits}b')
+                line += f"{period}"
+            elif period_bits == 8:
+                period = int(row['period']) & 0xFF  # keep only the lower 8 bits
+                formatted_period = format(period, f'0{length_bits}b')  # format as 8-bit binary string
+                line += f"{formatted_period}"
             f.write(f"{line}\n")
 
-export_to_mem_file(pulse_1, 'pulse_1.mif', 6, 4)
-export_to_mem_file(pulse_2, 'pulse_2.mif', 6, 4)
-export_to_mem_file(custom, 'custom.mif', 8, 2)
-export_to_mem_file(noise, 'noise.mif', 6, 4)
+export_to_mem_file(pulse_1, 'pulse_1.mif', 6, 4, 11)
+export_to_mem_file(pulse_2, 'pulse_2.mif', 6, 4, 11)
+export_to_mem_file(custom, 'custom.mif', 8, 2, 11)
+export_to_mem_file(noise, 'noise.mif', 6, 4, 8)
 # print(pulse_1)
