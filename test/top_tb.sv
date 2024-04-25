@@ -19,7 +19,7 @@ module top_tb ();
 
     initial begin
         sysReset();
-        repeat (99999999) @(posedge clk);
+        repeat (59999999) @(posedge clk);
         $stop();
     end
 
