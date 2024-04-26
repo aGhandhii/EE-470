@@ -120,12 +120,15 @@ module top (
     assign ch4_shift_clock_freq = ch4_settings[7:4];
     assign ch4_counter_width    = ch4_settings[3];
     assign ch4_freq_dividing_ratio = ch4_settings[2:0];
+    //assign ch4_shift_clock_freq = 4'b0000;
+    //assign ch4_counter_width    = 1'b1;
+    //assign ch4_freq_dividing_ratio = 3'b000;
     assign ch4_start            = (state == S_START) ? 1'b1 : 1'b0;
     assign ch4_enable           = 1'b1;
 
     // APU
     logic sound_enable;
-    assign sound_enable = 1'b1;
+    assign sound_enable = (state == S_RESET) ? 1'b0 : 1'b1;
     logic [15:0] audio_out;
 
     gb_APU APU (.*);

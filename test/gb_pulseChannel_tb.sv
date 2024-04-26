@@ -102,7 +102,7 @@ module gb_pulseChannel_tb();
         //repeat(100) tickLength();
         //repeat(100) tickEnvelope();
 
-        repeat(1000) begin
+        repeat(5000) begin
             tickAll();
             repeat(64) @(posedge clk);
         end

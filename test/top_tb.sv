@@ -12,6 +12,8 @@ module top_tb ();
 
     // Tasks
     task sysReset();
+        reset = 1'b0;
+        @(posedge clk);
         reset = 1'b1;
         @(posedge clk);
         reset = 1'b0;
@@ -19,7 +21,7 @@ module top_tb ();
 
     initial begin
         sysReset();
-        repeat (59999999) @(posedge clk);
+        repeat (69999999) @(posedge clk);
         $stop();
     end
 

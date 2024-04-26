@@ -128,9 +128,11 @@ module gb_noiseChannel (
 
     // LFSR and Polynomial Register State Progression
     always_ff @(posedge clk) begin
+        if (reset) begin
+            lfsr <= {15{1'b1}};
+        end
         if (start_posedge) begin
             frequencyTimer <= calcFrequencyTimer;
-            lfsr <= {15{1'b1}};
         end
         else begin
             if (frequencyTimer == 38'd0) begin
