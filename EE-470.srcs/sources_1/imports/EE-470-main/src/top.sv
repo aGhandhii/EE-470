@@ -11,7 +11,11 @@ Outputs:
 module top (
     input logic clk,
     input logic reset,
-    output logic [15:0] audio_out
+    output logic [15:0] audio_out,
+    output logic [3:0] ch1_out,
+    output logic [3:0] ch2_out,
+    output logic [3:0] ch3_out,
+    output logic [3:0] ch4_out
 );
 
     // State Definitions
@@ -118,18 +122,23 @@ module top (
     assign ch4_length           = ch4_settings[20:15];
     assign ch4_length_enable    = (ch4_length == 6'd0) ? 1'b0 : 1'b1;
     assign ch4_volume           = ch4_settings[14:11];
-    assign ch4_shift_clock_freq = ch4_settings[7:4];
-    assign ch4_counter_width    = ch4_settings[3];
-    assign ch4_freq_dividing_ratio = ch4_settings[2:0];
-    //assign ch4_shift_clock_freq = 4'b0000;
-    //assign ch4_counter_width    = 1'b1;
-    //assign ch4_freq_dividing_ratio = 3'b000;
+//    assign ch4_shift_clock_freq = ch4_settings[7:4];
+//    assign ch4_counter_width    = ch4_settings[3];
+//    assign ch4_freq_dividing_ratio = ch4_settings[2:0];
+    assign ch4_shift_clock_freq = 4'b0000;
+    assign ch4_counter_width    = 1'b1;
+    assign ch4_freq_dividing_ratio = 3'b000;
     assign ch4_start            = (state == S_START) ? 1'b1 : 1'b0;
     assign ch4_enable           = 1'b1;
 
     // APU
     logic sound_enable;
     assign sound_enable = (state == S_RESET) ? 1'b0 : 1'b1;
+    logic [3:0] ch1, ch2, ch3, ch4;
+    assign ch1_out = ch1;
+    assign ch2_out = ch2;
+    assign ch3_out = ch3;
+    assign ch4_out = ch4;
 
     gb_APU APU (.*);
 

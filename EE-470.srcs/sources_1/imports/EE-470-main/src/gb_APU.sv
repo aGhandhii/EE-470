@@ -51,7 +51,11 @@ module gb_APU (
     input logic        ch4_start,
     input logic        ch4_enable,
     input logic        sound_enable,
-    output logic [15:0] audio_out
+    output logic [15:0] audio_out,
+    output logic [3:0] ch1,
+    output logic [3:0] ch2,
+    output logic [3:0] ch3,
+    output logic [3:0] ch4
 );
 
     ////////////////////////////////
@@ -90,7 +94,6 @@ module gb_APU (
     ///////////////////////
 
     // Store Channel Outputs
-    logic [3:0] ch1, ch2, ch3, ch4;
     logic ch1_on_flag, ch2_on_flag, ch3_on_flag, ch4_on_flag;
 
     // Channel 1 Submodule. This channel is a pulse function with Sweep, Level,

@@ -25,3 +25,12 @@ set_property IOSTANDARD LVCMOS33 [get_ports pwm_aud]
 set_property IOSTANDARD LVCMOS33 [get_ports sw0]
 set_property IOSTANDARD LVCMOS33 [get_ports sysclk]
 
+
+set_property IOSTANDARD LVCMOS33 [get_ports pwm_aud_1]
+set_property IOSTANDARD LVCMOS33 [get_ports pwm_aud_2]
+set_property IOSTANDARD LVCMOS33 [get_ports pwm_aud_3]
+set_property IOSTANDARD LVCMOS33 [get_ports pwm_aud_4]
+set_property PACKAGE_PIN V18 [get_ports pwm_aud_1]
+set_property PACKAGE_PIN V17 [get_ports pwm_aud_2]
+set_property PACKAGE_PIN U17 [get_ports pwm_aud_3]
+set_property PACKAGE_PIN R16 [get_ports pwm_aud_4]

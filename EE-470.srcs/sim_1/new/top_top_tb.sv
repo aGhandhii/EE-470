@@ -4,6 +4,10 @@ module top_top_tb();
     logic sysclk;
     logic sw0;
     logic pwm_aud;
+    logic pwm_aud_1;
+    logic pwm_aud_2;
+    logic pwm_aud_3;
+    logic pwm_aud_4;
     logic [3:0] leds;
     
     top_top dut (.*);
