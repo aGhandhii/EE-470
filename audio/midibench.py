@@ -49,13 +49,13 @@ for i, track in enumerate(mid.tracks): # parse midi data to dict
                 'track': i,
                 'freq': midi_to_freq(msg.note),
                 'velocity': msg.velocity,
-                'cycles': int(64 - (256*(tick_T * msg.time)))
+                'cycles': ticks_to_cycles(msg.time, ticks_per_beat, tempo, clock_T)
             })
 
 for data in midi_data:
     if 'track' in data:
         new_row = pd.DataFrame({
-            'length': 0 if data['cycles'] < 0 or data['cycles'] > 63 else data['cycles'],
+            'length': data['cycles'],
             'volume': [velocity_to_volume(data['velocity'])],
             'period': [pulse_freq_to_period(data['freq'])]
         })
@@ -88,12 +88,12 @@ def export_to_mem_file(df, filename, length_bits, volume_bits, period_bits):
             else:
                 raise ValueError('Volume bits must be 2 or 4')
             line = f"{length}{volume}"
-            period = format(int(row['period']), f'0{length_bits}b')
+            period = format(int(row['period']), f'0{period_bits}b')
             line += f"{period}"
             f.write(f"{line}\n")
 
-export_to_mem_file(pulse_1, 'pulse_1.mif', 6, 4, 11)
-export_to_mem_file(pulse_2, 'pulse_2.mif', 6, 4, 11)
-export_to_mem_file(custom, 'custom.mif', 8, 2, 11)
-export_to_mem_file(noise, 'noise.mif', 6, 4, 8)
-# print(pulse_1)
+export_to_mem_file(pulse_1, 'pulse_1.mif', 24, 4, 11)
+export_to_mem_file(pulse_2, 'pulse_2.mif', 24, 4, 11)
+export_to_mem_file(custom, 'custom.mif', 24, 2, 11)
+export_to_mem_file(noise, 'noise.mif', 24, 4, 8)
+# print(midi_data)
