@@ -55,7 +55,8 @@ module gb_APU (
     output logic [3:0] ch1,
     output logic [3:0] ch2,
     output logic [3:0] ch3,
-    output logic [3:0] ch4
+    output logic [3:0] ch4,
+    output logic [5:0] DAC_sum
 );
 
     ////////////////////////////////
@@ -210,7 +211,8 @@ module gb_APU (
     assign output_level = 3'b111;  // Max this out for now
 
     // DAC Unit
-    logic [5:0] DAC_sum;
+//    logic [5:0] DAC_sum;
+//    assign DAC_sum = {2'b00, ch1} + {2'b00, ch2} + {2'b00, ch3} + {2'b00, ch4};
     always_comb begin
         DAC_sum = 6'd0;
         if (ch1_enable&ch1_on_flag) DAC_sum = DAC_sum + {2'b00, ch1};
@@ -225,5 +227,7 @@ module gb_APU (
 
     // Volume Unit, boost up to a 16-bit value
     assign audio_out  = (sound_enable) ? {1'b0, mixer_sum, 6'b0} : 16'b0;
+
+//    assign audio_out = {DAC_sum, 10'd0};
 
 endmodule  // gb_APU

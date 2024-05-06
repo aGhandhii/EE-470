@@ -1,7 +1,7 @@
 
 `define PWM_CYCLE_WIDTH 2048
-`define AUDIO_INPUT_BITS 16
-`define CLOCK_DIVISION 5
+`define AUDIO_INPUT_BITS 6
+`define CLOCK_DIVISION 4
 `define AUDIO_CH_INPUT_BITS 4
 module top_top(
     input logic sysclk,
@@ -20,12 +20,22 @@ module top_top(
     logic [3:0] ch2;
     logic [3:0] ch3;
     logic [3:0] ch4;
+    logic posedge_reset;
+    logic [5:0] small_audio_out;
 
-    top top(.clk(gb_clk), .reset(sw0), .audio_out(gb_audio_out), .ch1_out(ch1), .ch2_out(ch2), .ch3_out(ch3), .ch4_out(ch4));
+    top top(.clk(gb_clk),
+            .reset(sw0),
+            .audio_out(gb_audio_out),
+            .ch1_out(ch1),
+            .ch2_out(ch2),
+            .ch3_out(ch3),
+            .ch4_out(ch4),
+            .DAC_sum(small_audio_out)
+           );
     pwm_converter #(`PWM_CYCLE_WIDTH, `AUDIO_INPUT_BITS) pwm_conv (
         .clk(sysclk),
         .reset(sw0),
-        .in(gb_audio_out),
+        .in(small_audio_out),
         .out(pwm_aud)
     );
     pwm_converter #(`PWM_CYCLE_WIDTH, `AUDIO_CH_INPUT_BITS) pwm_conv_ch1 (
@@ -53,13 +63,15 @@ module top_top(
         .out(pwm_aud_4)
     );
     
+    edgeDetector ed (.clk(sysclk), .i(sw0), .o(posedge_reset));
+    
     always_comb begin
         gb_clk = clk_counter[`CLOCK_DIVISION-1];
         leds[0] = sw0;
     end
     
     always_ff @(posedge sysclk) begin
-        if (sw0) begin
+        if (posedge_reset) begin
             clk_counter <= `CLOCK_DIVISION'd0;
         end else begin
             clk_counter <= clk_counter + `CLOCK_DIVISION'd1;

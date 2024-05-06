@@ -1,4 +1,4 @@
-// Module for converting a 4-bit value into a pulse wave signal each clock cycle
+// Module for converting a value into a pulse wave signal each clock cycle
 
 /**
     PULSE_PERIOD: The amount of clock cycles that make up a single period of the pulse wave. Max value is 2^15 samples

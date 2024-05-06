@@ -23,7 +23,11 @@ module top_top_tb();
         sw0 <= 1;
         @(posedge sysclk);
         sw0 <= 0;
+        repeat(25000000) @(posedge sysclk);
+        sw0 <= 1;
         repeat(10000000) @(posedge sysclk);
+        sw0 <= 0;
+        repeat(50000000) @(posedge sysclk);
         $stop();
     end
 endmodule

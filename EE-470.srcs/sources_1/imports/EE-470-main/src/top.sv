@@ -15,7 +15,8 @@ module top (
     output logic [3:0] ch1_out,
     output logic [3:0] ch2_out,
     output logic [3:0] ch3_out,
-    output logic [3:0] ch4_out
+    output logic [3:0] ch4_out,
+    output logic [5:0] DAC_sum
 );
 
     // State Definitions
