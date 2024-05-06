@@ -6,6 +6,7 @@ fixed duration. Also handles reset requests.
 Inputs:
     clk     - System Clock, 2^22 Hz
     reset   - System Reset
+    length  - Length of Note, in clock cycles
 
 Outputs:
     state:  - Current State (00=RESET, 01=LOAD, 10=START, 11=PLAY)
@@ -13,6 +14,7 @@ Outputs:
 module top_stateMachine(
     input logic clk,
     input logic reset,
+    input logic [23:0] length,
     output logic [1:0] state
 );
 
@@ -22,9 +24,7 @@ module top_stateMachine(
     localparam S_PLAY = 2'b11;
 
     // We stay in the 'play_note' state for the longest 'length' duration
-    // Max Length = 63/256 seconds, convert to ticks of 1/2^22 Hz,
-    // so we need 1032192 ticks of the 2^22 clk
-    logic [19:0] tempo_counter;
+    logic [23:0] tempo_counter;
 
     // Handle state progession
     logic [1:0] ns;
@@ -40,7 +40,7 @@ module top_stateMachine(
                 ns = S_PLAY;
             end
             S_PLAY: begin
-                ns = (tempo_counter == 20'd1032192) ? S_LOAD : S_PLAY;
+                ns = (tempo_counter == 20'd0) ? S_LOAD : S_PLAY;
             end
             default: ns = S_RESET;
         endcase
@@ -52,7 +52,7 @@ module top_stateMachine(
             state <= S_RESET;
         end
         else begin
-            tempo_counter <= (state == S_PLAY) ? tempo_counter + 20'd1 : 20'd0;
+            tempo_counter <= (state == S_PLAY) ? tempo_counter - 24'd1 : length;
             state <= ns;
         end
     end

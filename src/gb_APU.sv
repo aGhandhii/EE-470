@@ -19,31 +19,24 @@ Inputs:
     sound_enable    - Master sound control
 
 Outputs:
+    ch*             - Channel Output
     audio_out       - Audio Output
 */
 module gb_APU (
     input logic clk,
     input logic reset,
-    input logic [5:0]  ch1_length,
-    input logic        ch1_length_enable,
     input logic [3:0]  ch1_volume,
     input logic [10:0] ch1_frequency,
     input logic        ch1_start,
     input logic        ch1_enable,
-    input logic [5:0]  ch2_length,
-    input logic        ch2_length_enable,
     input logic [3:0]  ch2_volume,
     input logic [10:0] ch2_frequency,
     input logic        ch2_start,
     input logic        ch2_enable,
-    input logic [7:0]  ch3_length,
-    input logic        ch3_length_enable,
     input logic [1:0]  ch3_volume,
     input logic [10:0] ch3_frequency,
     input logic        ch3_start,
     input logic        ch3_enable,
-    input logic [5:0]  ch4_length,
-    input logic        ch4_length_enable,
     input logic [3:0]  ch4_volume,
     input logic [3:0]  ch4_shift_clock_freq,
     input logic        ch4_counter_width,
@@ -51,7 +44,11 @@ module gb_APU (
     input logic        ch4_start,
     input logic        ch4_enable,
     input logic        sound_enable,
-    output logic [15:0] audio_out
+    output logic [3:0] ch1,
+    output logic [3:0] ch2,
+    output logic [3:0] ch3,
+    output logic [3:0] ch4,
+    output logic [5:0] audio_out
 );
 
     ////////////////////////////////
@@ -90,7 +87,6 @@ module gb_APU (
     ///////////////////////
 
     // Store Channel Outputs
-    logic [3:0] ch1, ch2, ch3, ch4;
     logic ch1_on_flag, ch2_on_flag, ch3_on_flag, ch4_on_flag;
 
     // Channel 1 Submodule. This channel is a pulse function with Sweep, Level,
@@ -105,12 +101,12 @@ module gb_APU (
         .sweep_decreasing(1'b0),
         .num_sweep_shifts(3'b000),
         .wave_duty(2'b10),
-        .length(ch1_length),
+        .length(6'b111111),
         .initial_volume(ch1_volume),
         .envelope_increasing(1'b0),
         .num_envelope_sweeps(3'b000),
         .start(ch1_start),
-        .single(ch1_length_enable),
+        .single(1'b0),
         .frequency(ch1_frequency),
         .level(ch1),
         .enable(ch1_on_flag)
@@ -128,12 +124,12 @@ module gb_APU (
         .sweep_decreasing(1'b0),
         .num_sweep_shifts(3'b000),
         .wave_duty(2'b10),
-        .length(ch2_length),
+        .length(6'b111111),
         .initial_volume(ch2_volume),
         .envelope_increasing(1'b0),
         .num_envelope_sweeps(3'b000),
         .start(ch2_start),
-        .single(ch2_length_enable),
+        .single(1'b0),
         .frequency(ch2_frequency),
         .level(ch2),
         .enable(ch2_on_flag)
@@ -147,10 +143,10 @@ module gb_APU (
         .reset(~sound_enable),
         .clk(clk),
         .clk_length_ctr(clk_length_ctr),
-        .length(ch3_length),
+        .length(8'b11111111),
         .volume(ch3_volume),
         .on(1'b1),
-        .single(ch3_length_enable),
+        .single(1'b0),
         .start(ch3_start),
         .frequency(ch3_frequency),
         .wave_addr(wave_addr),
@@ -166,7 +162,7 @@ module gb_APU (
         .clk(clk),
         .clk_length_ctr(clk_length_ctr),
         .clk_vol_env(clk_vol_env),
-        .length(ch4_length),
+        .length(6'b111111),
         .initial_volume(ch4_volume),
         .envelope_increasing(1'b0),
         .num_envelope_sweeps(3'b000),
@@ -174,7 +170,7 @@ module gb_APU (
         .counter_width(ch4_counter_width),
         .freq_dividing_ratio(ch4_freq_dividing_ratio),
         .start(ch4_start),
-        .single(ch4_length_enable),
+        .single(1'b0),
         .level(ch4),
         .enable(ch4_on_flag)
     );
@@ -202,25 +198,13 @@ module gb_APU (
     High-Pass filter.
     */
 
-    // Master volume modifier
-    logic [2:0] output_level;
-    assign output_level = 3'b111;  // Max this out for now
-
-    // DAC Unit
-    logic [5:0] DAC_sum;
+    // Digital Mixing
     always_comb begin
-        DAC_sum = 6'd0;
-        if (ch1_enable&ch1_on_flag) DAC_sum = DAC_sum + {2'b00, ch1};
-        if (ch2_enable&ch2_on_flag) DAC_sum = DAC_sum + {2'b00, ch2};
-        if (ch3_enable&ch3_on_flag) DAC_sum = DAC_sum + {2'b00, ch3};
-        if (ch4_enable&ch4_on_flag) DAC_sum = DAC_sum + {2'b00, ch4};
+        audio_out = 6'd0;
+        if (ch1_enable&ch1_on_flag) audio_out = audio_out + {2'b00, ch1};
+        if (ch2_enable&ch2_on_flag) audio_out = audio_out + {2'b00, ch2};
+        if (ch3_enable&ch3_on_flag) audio_out = audio_out + {2'b00, ch3};
+        if (ch4_enable&ch4_on_flag) audio_out = audio_out + {2'b00, ch4};
     end
-
-    // Mixer Unit
-    logic [8:0] mixer_sum;
-    assign mixer_sum = DAC_sum * output_level;
-
-    // Volume Unit, boost up to a 16-bit value
-    assign audio_out  = (sound_enable) ? {1'b0, mixer_sum, 6'b0} : 16'b0;
 
 endmodule  // gb_APU

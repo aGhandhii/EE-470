@@ -3,9 +3,9 @@ quietly WaveActivateNextPane {} 0
 add wave -noupdate /top_stateMachine_tb/clk
 add wave -noupdate /top_stateMachine_tb/reset
 add wave -noupdate /top_stateMachine_tb/state
-add wave -noupdate /top_stateMachine_tb/dut/tempo_counter
-add wave -noupdate /top_stateMachine_tb/dut/ps
 add wave -noupdate /top_stateMachine_tb/dut/ns
+add wave -noupdate -radix unsigned /top_stateMachine_tb/length
+add wave -noupdate -radix unsigned /top_stateMachine_tb/dut/tempo_counter
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors {{Cursor 1} {0 ps} 0}
 quietly wave cursor active 0
@@ -23,4 +23,4 @@ configure wave -griddelta 2
 configure wave -timeline 0
 configure wave -timelineunits ps
 update
-WaveRestoreZoom {0 ps} {1 ns}
+WaveRestoreZoom {7280 ps} {8280 ps}

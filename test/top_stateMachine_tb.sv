@@ -3,6 +3,7 @@ module top_stateMachine_tb();
 
     // IO
     logic clk, reset;
+    logic [23:0] length;
     logic [1:0] state;
 
     // Clock Emulation
@@ -23,10 +24,12 @@ module top_stateMachine_tb();
 
     // Testbench
     initial begin
+        length = 24'd150;
         sysReset();
         repeat(400) @(posedge clk);
+        length = 24'd60;
         sysReset();
-        repeat(10) @(posedge clk);
+        repeat(100) @(posedge clk);
         $stop();
     end
 
