@@ -42,15 +42,26 @@ noise = pd.DataFrame(columns=['length', 'volume', 'period'])
 
 midi_data = []
 
+
+
 for i, track in enumerate(mid.tracks): # parse midi data to dict
-    for msg in track:
-        if msg.type == 'note_on':
+
+    for j in range(0, len(track)):
+        if track[j].type == 'note_on':
             midi_data.append({
                 'track': i,
-                'freq': midi_to_freq(msg.note),
-                'velocity': msg.velocity,
-                'cycles': ticks_to_cycles(msg.time, ticks_per_beat, tempo, clock_T)
+                'freq': midi_to_freq(track[j].note),
+                'velocity': track[j].velocity,
+                'cycles': ticks_to_cycles(track[j+1].time, ticks_per_beat, tempo, clock_T)
             })
+    # for msg in track:
+    #     if msg.type == 'note_on':
+    #         midi_data.append({
+    #             'track': i,
+    #             'freq': midi_to_freq(msg.note),
+    #             'velocity': msg.velocity,
+    #             'cycles': ticks_to_cycles(msg.time, ticks_per_beat, tempo, clock_T)
+    #         })
 
 for data in midi_data:
     if 'track' in data:
@@ -96,4 +107,15 @@ export_to_mem_file(pulse_1, 'pulse_1.mif', 24, 4, 11)
 export_to_mem_file(pulse_2, 'pulse_2.mif', 24, 4, 11)
 export_to_mem_file(custom, 'custom.mif', 24, 2, 11)
 export_to_mem_file(noise, 'noise.mif', 24, 4, 8)
-# print(midi_data)
+
+# for data in midi_data:
+#     if 'track' in data and data['track'] == 1:
+#         with open('midi_data.txt', 'a') as f:
+            
+#             f.write(f"{data}\n")
+
+# for i, track in enumerate(mid.tracks): # parse midi data to dict
+#     for msg in track:
+#         with open('midi_data.txt', 'a') as f:
+            
+#             f.write(f"{str(msg)}\n")
