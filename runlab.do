@@ -3,13 +3,13 @@ vlib work
 
 # Compile Code
 vlog "./src/*.sv"
-vlog "./test/top_top_tb.sv"
+vlog "./test/gb_APU_tb.sv"
 
 # Start the Simulator
-vsim -voptargs="+acc" -t 1ps -lib work top_top_tb
+vsim -voptargs="+acc" -t 1ps -lib work gb_APU_tb
 
 # Source the wave file
-do ./Modelsim/top_top_wave.do
+do ./Modelsim/gb_APU_wave.do
 
 # Set window types
 view wave

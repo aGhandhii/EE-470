@@ -25,11 +25,11 @@ module top_top_tb ();
 
     initial begin
         reset();
-        repeat(9000000) @(posedge sysclk);
+        repeat(90000000) @(posedge sysclk);
         sw0 <= 1;
-        repeat(1000000) @(posedge sysclk);
+        repeat(100000) @(posedge sysclk);
         sw0 <= 0;
-        repeat(5000000) @(posedge sysclk);
+        repeat(50000000) @(posedge sysclk);
         $stop();
     end
 endmodule
