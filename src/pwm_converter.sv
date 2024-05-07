@@ -1,4 +1,4 @@
-// Module for converting a 4-bit value into a pulse wave signal each clock cycle
+// Module for converting a value into a pulse wave signal each clock cycle
 
 /**
     PULSE_PERIOD: The amount of clock cycles that make up a single period of the pulse wave. Max value is 2^15 samples
@@ -12,7 +12,7 @@
 module pwm_converter #(parameter PULSE_PERIOD = 16, parameter INPUT_BITS = 4) (
     input logic clk,
     input logic reset,
-    input logic [3:0] in,
+    input logic [INPUT_BITS-1:0] in,
     output logic out
 );
     // Counts down from the total number of samples per period to know when to get the next input and start

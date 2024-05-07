@@ -2,11 +2,11 @@
 module top_tb ();
 
     logic clk, reset;
-    logic [3:0] ch1_out;
-    logic [3:0] ch2_out;
-    logic [3:0] ch3_out;
-    logic [3:0] ch4_out;
-    logic [5:0] DAC_sum;
+    logic [3:0] ch1;
+    logic [3:0] ch2;
+    logic [3:0] ch3;
+    logic [3:0] ch4;
+    logic [5:0] audio_out;
 
     initial begin
         clk = 1'b1;
@@ -26,9 +26,9 @@ module top_tb ();
 
     initial begin
         sysReset();
-        repeat (3999999) @(posedge clk);
+        repeat (5999999) @(posedge clk);
         sysReset();
-        repeat (3999999) @(posedge clk);
+        repeat (5999999) @(posedge clk);
         $stop();
     end
 

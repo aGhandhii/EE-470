@@ -1,4 +1,4 @@
-/* Top-Level Module
+/* Top-Level Module for APU and State Machines
 
 Stores ROM for channel notes and loads them into channels following the tempo.
 
@@ -13,11 +13,11 @@ Outputs:
 module top (
     input logic clk,
     input logic reset,
-    output logic [3:0] ch1_out,
-    output logic [3:0] ch2_out,
-    output logic [3:0] ch3_out,
-    output logic [3:0] ch4_out,
-    output logic [5:0] DAC_sum
+    output logic [3:0] ch1,
+    output logic [3:0] ch2,
+    output logic [3:0] ch3,
+    output logic [3:0] ch4,
+    output logic [5:0] audio_out
 );
 
     // State Definitions
@@ -137,24 +137,18 @@ module top (
     logic        ch4_enable;
     assign ch4_length           = ch4_settings[38:15];
     assign ch4_volume           = ch4_settings[14:11];
-    assign ch4_shift_clock_freq = ch4_settings[7:4];
-    assign ch4_counter_width    = ch4_settings[3];
-    assign ch4_freq_dividing_ratio = ch4_settings[2:0];
+    //assign ch4_shift_clock_freq = ch4_settings[7:4];
+    //assign ch4_counter_width    = ch4_settings[3];
+    //assign ch4_freq_dividing_ratio = ch4_settings[2:0];
+    assign ch4_shift_clock_freq = 3'b111;
+    assign ch4_counter_width    = 1'b1;
+    assign ch4_freq_dividing_ratio = 3'b111;
     assign ch4_start            = (ch4_state == S_START) ? 1'b1 : 1'b0;
     assign ch4_enable           = 1'b1;
 
     // APU
     logic sound_enable;
     assign sound_enable = (ch1_state == S_RESET) ? 1'b0 : 1'b1;
-
-    logic [3:0] ch1, ch2, ch3, ch4;
-    logic [5:0] audio_out;
-
-    assign ch1_out = ch1;
-    assign ch2_out = ch2;
-    assign ch3_out = ch3;
-    assign ch4_out = ch4;
-    assign DAC_sum = audio_out;
 
     gb_APU APU (.*);
 
