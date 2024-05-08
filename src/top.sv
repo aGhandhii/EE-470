@@ -3,16 +3,20 @@
 Stores ROM for channel notes and loads them into channels following the tempo.
 
 Inputs:
-    clk     - 2^22 Hz
-    reset   - System Reset
+    clk             - 2^22 Hz
+    reset           - System Reset
+    sweep_enable    - Apply sweep to pulse channels
+    envelope_enable - Apply envelope to pulse and noise channels
 Outputs:
-    ch*_out - Channel out
-    DAC_sum - Mixed output of all channels
+    ch*_out         - Channel out
+    DAC_sum         - Mixed output of all channels
 
 */
 module top (
     input logic clk,
     input logic reset,
+    input logic sweep_enable,
+    input logic envelope_enable,
     output logic [3:0] ch1,
     output logic [3:0] ch2,
     output logic [3:0] ch3,

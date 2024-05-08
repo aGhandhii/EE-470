@@ -1,6 +1,8 @@
 module top_top_tb ();
     logic sysclk;
     logic sw0;
+    logic button0;
+    logic button1;
     logic pwm_aud;
     logic pwm_aud_1;
     logic pwm_aud_2;
@@ -19,11 +21,13 @@ module top_top_tb ();
         sw0 <= 0;
         @(posedge sysclk);
         sw0 <= 1;
-        @(posedge sysclk);
+        repeat(100) @(posedge sysclk);
         sw0 <= 0;
     endtask
 
     initial begin
+        button0 = 1'b0;
+        button1 = 1'b1;
         reset();
         repeat(90000000) @(posedge sysclk);
         sw0 <= 1;

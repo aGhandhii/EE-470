@@ -17,6 +17,8 @@ Inputs:
     ch3_*           - Channel 3 Settings
     ch4_*           - Channel 4 Settings
     sound_enable    - Master sound control
+    sweep_enable    - Apply sweep to pulse channels
+    envelope_enable - Apply envelope to pulse and noise channels
 
 Outputs:
     ch*             - Channel Output
@@ -44,6 +46,8 @@ module gb_APU (
     input logic        ch4_start,
     input logic        ch4_enable,
     input logic        sound_enable,
+    input logic        sweep_enable,
+    input logic        envelope_enable,
     output logic [3:0] ch1,
     output logic [3:0] ch2,
     output logic [3:0] ch3,
@@ -97,14 +101,14 @@ module gb_APU (
         .clk_length_ctr(clk_length_ctr),
         .clk_vol_env(clk_vol_env),
         .clk_sweep(clk_sweep),
-        .sweep_time(3'b000),
-        .sweep_decreasing(1'b0),
-        .num_sweep_shifts(3'b000),
+        .sweep_time(sweep_enable ? 3'b001 : 3'b000),
+        .sweep_decreasing(1'b1),
+        .num_sweep_shifts(sweep_enable ? 3'b001 : 3'b000),
         .wave_duty(2'b10),
         .length(6'b111111),
         .initial_volume(ch1_volume),
         .envelope_increasing(1'b0),
-        .num_envelope_sweeps(3'b000),
+        .num_envelope_sweeps(envelope_enable ? 3'b001 : 3'b000),
         .start(ch1_start),
         .single(1'b0),
         .frequency(ch1_frequency),
@@ -120,14 +124,14 @@ module gb_APU (
         .clk_length_ctr(clk_length_ctr),
         .clk_vol_env(clk_vol_env),
         .clk_sweep(clk_sweep),
-        .sweep_time(3'b000),
-        .sweep_decreasing(1'b0),
-        .num_sweep_shifts(3'b000),
+        .sweep_time(sweep_enable ? 3'b001 : 3'b000),
+        .sweep_decreasing(1'b1),
+        .num_sweep_shifts(sweep_enable ? 3'b001 : 3'b000),
         .wave_duty(2'b10),
         .length(6'b111111),
         .initial_volume(ch2_volume),
         .envelope_increasing(1'b0),
-        .num_envelope_sweeps(3'b000),
+        .num_envelope_sweeps(envelope_enable ? 3'b001 : 3'b000),
         .start(ch2_start),
         .single(1'b0),
         .frequency(ch2_frequency),
@@ -165,7 +169,7 @@ module gb_APU (
         .length(6'b111111),
         .initial_volume(ch4_volume),
         .envelope_increasing(1'b0),
-        .num_envelope_sweeps(3'b000),
+        .num_envelope_sweeps(envelope_enable ? 3'b001 : 3'b000),
         .shift_clock_freq(ch4_shift_clock_freq),
         .counter_width(ch4_counter_width),
         .freq_dividing_ratio(ch4_freq_dividing_ratio),

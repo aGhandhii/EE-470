@@ -11,7 +11,8 @@ Also takes FPGA system clock and divides to approximate the GameBoy system clock
 Inputs:
     sysclk      - 125MHz system clock
     sw0         - Switch 0 on FPGA, will be used as a reset signal
-
+    button0     - Button 0 on FPGA, controls envelope
+    button1     - Button 1 on FPGA, controls sweep
 Outputs:
     pwm_aud*    - pwm output for specified channel or mixed audio
     leds        - FPGA leds
@@ -19,6 +20,8 @@ Outputs:
 module top_top (
     input  logic sysclk,
     input  logic sw0,
+    input  logic button0,
+    input  logic button1,
     output logic pwm_aud,
     output logic pwm_aud_1,
     output logic pwm_aud_2,
@@ -39,6 +42,8 @@ module top_top (
     top top (
         .clk(gb_clk),
         .reset(sw0),
+        .sweep_enable(~button1),
+        .envelope_enable(~button0),
         .ch1(ch1),
         .ch2(ch2),
         .ch3(ch3),

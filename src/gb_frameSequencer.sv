@@ -57,7 +57,9 @@ module gb_frameSequencer (
 
     // Output Clock Assignments
     assign length_clk   = (div[13:0] == {14{1'b1}});  // 2^(22-14) = 256
-    assign envelope_clk = (div[15:0] == {16{1'b1}});  // 2^(22-16) = 64
+    //assign envelope_clk = (div[15:0] == {16{1'b1}});  // 2^(22-16) = 64
+    // Speed up envelope_clk for better output
+    assign envelope_clk = (div[14:0] == {15{1'b1}});
     assign sweep_clk    = (div[14:0] == {15{1'b1}});  // 2^(22-15) = 128
 
 endmodule  // gb_frameSequencer

@@ -23,6 +23,8 @@ module gb_APU_tb();
     logic        ch4_start;
     logic        ch4_enable;
     logic        sound_enable;
+    logic        sweep_enable;
+    logic        envelope_enable;
     logic [3:0] ch1, ch2, ch3, ch4;
     logic [5:0] audio_out;
 
@@ -96,10 +98,12 @@ module gb_APU_tb();
         ch4_enable = 1'b1;
 
         // Run the simulation
-        sound_enable = 1'b1;
+        sound_enable    = 1'b1;
+        envelope_enable = 1'b1;
+        sweep_enable    = 1'b1;
         sysReset();
         triggerChannel(activeChannels);
-        repeat(999999) @(posedge clk);
+        repeat(9999999) @(posedge clk);
         $stop();
     end
 

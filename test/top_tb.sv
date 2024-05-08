@@ -2,6 +2,7 @@
 module top_tb ();
 
     logic clk, reset;
+    logic sweep_enable, envelope_enable;
     logic [3:0] ch1;
     logic [3:0] ch2;
     logic [3:0] ch3;
@@ -25,6 +26,8 @@ module top_tb ();
     endtask
 
     initial begin
+        sweep_enable    = 1'b1;
+        envelope_enable = 1'b1;
         sysReset();
         repeat (5999999) @(posedge clk);
         sysReset();
