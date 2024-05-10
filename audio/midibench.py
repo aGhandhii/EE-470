@@ -54,14 +54,6 @@ for i, track in enumerate(mid.tracks): # parse midi data to dict
                 'velocity': track[j].velocity,
                 'cycles': ticks_to_cycles(track[j+1].time, ticks_per_beat, tempo, clock_T)
             })
-    # for msg in track:
-    #     if msg.type == 'note_on':
-    #         midi_data.append({
-    #             'track': i,
-    #             'freq': midi_to_freq(msg.note),
-    #             'velocity': msg.velocity,
-    #             'cycles': ticks_to_cycles(msg.time, ticks_per_beat, tempo, clock_T)
-    #         })
 
 for data in midi_data:
     if 'track' in data:
@@ -82,40 +74,38 @@ for data in midi_data:
 def export_to_mem_file(df, filename, length_bits, volume_bits, period_bits):
     with open(filename, 'w') as f:
         for _, row in df.iterrows():
-            length = format(int(row['length']), f'0{length_bits}b')
-            if volume_bits == 4:
-                volume = format(int(row['volume']), '04b')
-            elif volume_bits == 2:
-                if int(row['volume']) == 0:
-                    volume = format(0, '02b')
-                elif int(row['volume']) <= 4:
-                    volume = format(3, '02b')
-                elif int(row['volume']) <= 8:
-                    volume = format(2, '02b')
-                elif int(row['volume']) <= 15:
-                    volume = format(1, '02b')
+            original_length = int(row['length'])
+            original_volume = int(row['volume'])
+            original_period = int(row['period'])
+            while original_length > 0:
+                length = min(original_length, 2**length_bits - 1)
+                original_length -= length
+                length = format(length, f'0{length_bits}b')
+
+                # Keep the original volume for each split note
+                volume = original_volume
+                if volume_bits == 4:
+                    volume = format(volume, '04b')
+                elif volume_bits == 2:
+                    if volume == 0:
+                        volume = format(0, '02b')
+                    elif volume <= 4:
+                        volume = format(3, '02b')
+                    elif volume <= 8:
+                        volume = format(2, '02b')
+                    elif volume <= 15:
+                        volume = format(1, '02b')
+                    else:
+                        volume = format(0, '02b')  # default to '00' if volume > 15
                 else:
-                    volume = format(0, '02b')  # default to '00' if volume > 15
-            else:
-                raise ValueError('Volume bits must be 2 or 4')
-            line = f"{length}{volume}"
-            period = format(int(row['period']), f'0{period_bits}b')
-            line += f"{period}"
-            f.write(f"{line}\n")
+                    raise ValueError('Volume bits must be 2 or 4')
+
+                line = f"{length}{volume}"
+                period = format(original_period, f'0{period_bits}b')
+                line += f"{period}"
+                f.write(f"{line}\n")
 
 export_to_mem_file(pulse_1, 'pulse_1.mif', 24, 4, 11)
 export_to_mem_file(pulse_2, 'pulse_2.mif', 24, 4, 11)
 export_to_mem_file(custom, 'custom.mif', 24, 2, 11)
 export_to_mem_file(noise, 'noise.mif', 24, 4, 8)
-
-# for data in midi_data:
-#     if 'track' in data and data['track'] == 1:
-#         with open('midi_data.txt', 'a') as f:
-            
-#             f.write(f"{data}\n")
-
-# for i, track in enumerate(mid.tracks): # parse midi data to dict
-#     for msg in track:
-#         with open('midi_data.txt', 'a') as f:
-            
-#             f.write(f"{str(msg)}\n")
