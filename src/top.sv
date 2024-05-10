@@ -141,12 +141,12 @@ module top (
     logic        ch4_enable;
     assign ch4_length           = ch4_settings[38:15];
     assign ch4_volume           = ch4_settings[14:11];
-    //assign ch4_shift_clock_freq = ch4_settings[7:4];
-    //assign ch4_counter_width    = ch4_settings[3];
-    //assign ch4_freq_dividing_ratio = ch4_settings[2:0];
-    assign ch4_shift_clock_freq = 3'b111;
-    assign ch4_counter_width    = 1'b1;
-    assign ch4_freq_dividing_ratio = 3'b111;
+    assign ch4_shift_clock_freq = ch4_settings[7:4];
+    assign ch4_counter_width    = ch4_settings[3];
+    assign ch4_freq_dividing_ratio = ch4_settings[2:0];
+    //assign ch4_shift_clock_freq = 3'b111;
+    //assign ch4_counter_width    = 1'b1;
+    //assign ch4_freq_dividing_ratio = 3'b111;
     assign ch4_start            = (ch4_state == S_START) ? 1'b1 : 1'b0;
     assign ch4_enable           = 1'b1;
 

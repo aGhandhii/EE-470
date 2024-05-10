@@ -1,6 +1,6 @@
 `define PWM_CYCLE_WIDTH 2048
 `define AUDIO_INPUT_BITS 6
-`define CLOCK_DIVISION 4
+`define CLOCK_DIVISION 5
 `define AUDIO_CH_INPUT_BITS 4
 
 /* Top Module for FPGA, to be synthesized
@@ -42,8 +42,8 @@ module top_top (
     top top (
         .clk(gb_clk),
         .reset(sw0),
-        .sweep_enable(~button1),
-        .envelope_enable(~button0),
+        .sweep_enable(button1),
+        .envelope_enable(button0),
         .ch1(ch1),
         .ch2(ch2),
         .ch3(ch3),
