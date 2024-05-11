@@ -2,7 +2,7 @@ from mido import Message, MidiFile, MidiTrack, MetaMessage, tick2second
 import pandas as pd
 import math
 
-mid = MidiFile("Smboverworld.mid")
+mid = MidiFile("Hallelujah.mid")
 
 clock_T = 1/math.pow(2,22)
 ticks_per_beat = mid.ticks_per_beat
@@ -105,7 +105,7 @@ def export_to_mem_file(df, filename, length_bits, volume_bits, period_bits):
                 line += f"{period}"
                 f.write(f"{line}\n")
 
-export_to_mem_file(pulse_1, 'pulse_1_mario.mif', 24, 4, 11)
-export_to_mem_file(pulse_2, 'pulse_2_mario.mif', 24, 4, 11)
-export_to_mem_file(custom, 'custom_mario.mif', 24, 2, 11)
-export_to_mem_file(noise, 'noise_mario.mif', 24, 4, 8)
+export_to_mem_file(pulse_1, 'pulse_1_hallelujah.mif', 24, 4, 11)
+export_to_mem_file(pulse_2, 'pulse_2_hallelujah.mif', 24, 4, 11)
+export_to_mem_file(custom, 'custom_hallelujah.mif', 24, 2, 11)
+export_to_mem_file(noise, 'noise_hallelujah.mif', 24, 4, 8)
