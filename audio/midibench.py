@@ -105,7 +105,7 @@ def export_to_mem_file(df, filename, length_bits, volume_bits, period_bits):
                 line += f"{period}"
                 f.write(f"{line}\n")
 
-export_to_mem_file(pulse_1, 'pulse_1.mif', 24, 4, 11)
-export_to_mem_file(pulse_2, 'pulse_2.mif', 24, 4, 11)
-export_to_mem_file(custom, 'custom.mif', 24, 2, 11)
-export_to_mem_file(noise, 'noise.mif', 24, 4, 8)
+export_to_mem_file(pulse_1, 'pulse_1_mario.mif', 24, 4, 11)
+export_to_mem_file(pulse_2, 'pulse_2_mario.mif', 24, 4, 11)
+export_to_mem_file(custom, 'custom_mario.mif', 24, 2, 11)
+export_to_mem_file(noise, 'noise_mario.mif', 24, 4, 8)
