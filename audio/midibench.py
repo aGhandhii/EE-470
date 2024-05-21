@@ -54,6 +54,13 @@ for i, track in enumerate(mid.tracks): # parse midi data to dict
                 'velocity': track[j].velocity,
                 'cycles': ticks_to_cycles(track[j+1].time, ticks_per_beat, tempo, clock_T)
             })
+        elif track[j].type == "note_off":
+            midi_data.append({
+                'track': i,
+                'freq': midi_to_freq(track[j].note),
+                'velocity': 0,
+                'cycles': ticks_to_cycles(track[j+1].time, ticks_per_beat, tempo, clock_T)
+            })
 
 for data in midi_data:
     if 'track' in data:
